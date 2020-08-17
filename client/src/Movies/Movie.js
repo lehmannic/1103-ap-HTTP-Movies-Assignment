@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { useParams } from "react-router-dom";
-import MovieCard from "./MovieCard";
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { useParams, useHistory } from 'react-router-dom';
+import MovieCard from './MovieCard';
 
-function Movie({ addToSavedList }) {
+function Movie({ getMovieList, addToSavedList }) {
+  const { push } = useHistory();
   const [movie, setMovie] = useState(null);
   const params = useParams();
 
@@ -17,6 +18,17 @@ function Movie({ addToSavedList }) {
   const saveMovie = () => {
     addToSavedList(movie);
   };
+  const handleDelete = (e) => {
+    // make a DELETE request to remove the item
+    axios
+      .delete(`http://localhost:5000/api/movies/${movie.id}`)
+      .then((res) => {
+        // console.log('handleSubmit -> res.data', res.data);
+        getMovieList();
+        push(`/`);
+      })
+      .catch((err) => console.log(err));
+  };
 
   useEffect(() => {
     fetchMovie(params.id);
@@ -27,12 +39,21 @@ function Movie({ addToSavedList }) {
   }
 
   return (
-    <div className="save-wrapper">
+    <div className='save-wrapper'>
       <MovieCard movie={movie} />
 
-      <div className="save-button" onClick={saveMovie}>
+      <div className='save-button' onClick={saveMovie}>
         Save
       </div>
+      <button
+        className='home-button'
+        onClick={() => push(`/update-movie/${movie.id}`)}
+      >
+        update
+      </button>
+      <button className='delete-button' onClick={handleDelete}>
+        delete
+      </button>
     </div>
   );
 }

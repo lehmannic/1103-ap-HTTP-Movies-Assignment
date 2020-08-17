@@ -71,6 +71,11 @@ body {
   background-color: lightskyblue;
 }
 
+.delete-button {
+  padding: 5px 10px;
+  background-color: #ff6e6c;
+}
+
 .movie-warning {
   color: red;
   text-align: center;
